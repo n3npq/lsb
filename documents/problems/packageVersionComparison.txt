@@ -1,0 +1,76 @@
+LSB Specification
+
+Problem Statement:
+------------------
+
+The LSB Package Standard does not specify how package (or dependency)
+versions can be compared in order to detect "newer". Without the
+ability to compare two versions unambiguusly, versions can only be
+used for identification purposes, and equality is the only well defined
+operation. Most (if not all) package managers are expected to
+be able to upgrade/update a package with a version that is
+later or newer.
+
+Note that this proposal is _ONLY_ for an LSB package version
+and explicitly ignore both Epoch:/Release: which have other
+more complex usage cases by existimng package managers.
+
+
+(Proposed) Solution:
+--------------------
+
+Adopt a version scheme for the LSB Package Standard that can be
+used for more than package version identification using equality.
+
+The naive consistent choice might be to document the version comparison in
+rpm-3.0.6. However that choice is incompatible with Debian dpkg as well
+as with extensions to version comparison that have been been deployed
+by distros using rpm since rpm-3.0.6 was used.
+
+Adopting a MAJOR.MINOR.PATCH scheme (for LSB packages) is another
+candidate. Adopting MAJOR.MINOR.PATCH is often used in software
+engineering, and has a glibc strverscmp(3). If only digits are permitted
+in the version strings, there is a good possiblity that both dpkg
+and rpm might compare package versions identically.
+
+Another possibility would be to adopt semantic versioning:
+	http://semver.org
+if there is a perceived need to use alphabetics and punctuation
+as well as digits in LSB Package Standard versions.
+
+I am suggesting MAJOR.MINOR.PATCH using only digit strings
+with only a "." period as a permitted delimiter, where both
+MINOR and PATCH are optional, but MINOR must be specified
+if PATCH is included in the version string.
+
+Solution Discussion Links:
+--------------------------
+
+The incompatibilities between RPM version comparison and
+other version comparison schemes have been discussed many
+many places.
+
+
+
+
+Solution Rationale:
+------------------
+
+The solution was derived by noting that LSB Package Standard versions
+is not well specified.
+
+
+Distributions Support:
+----------------------
+
+Distribution support for what LSB adopts for LSB Packages is irrelevant.
+Meanwhile there should be very few surprises in choosing MAJOR.MINOR.PATCH
+versioning as described above.
+
+
+Verification Test:
+------------------
+
+Test cases can be written as needed: the proposal is for adoption
+of a version scheme that can be recommended and suggested as part
+of the LSB Package Standard specification.
