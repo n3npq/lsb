@@ -1,0 +1,101 @@
+LSB Specification
+
+Problem Statement:
+------------------
+
+The existing LSB Package Standard specifies a format (which hasn't
+changed this century) and a tag content enumeration (most of which
+has not changed this century, the major exception is RPMTAG_FILENAMES),
+but doesn't address the problem of package metadata sufficiently directly.
+
+The specification (and the tools based on the spec) forbid certain
+tags (RPMTAG_TRIGGERS), constrain other values (i.e. only
+	Requires: lsb >= X.Y
+is permitted), and ignore other tags. This generally leads to
+an arbitrary specification that cannot be usefully implemented
+in any version of RPM.
+
+The metadata in a package (not just RPM) is moderately complicated,
+and largely invisible because hidden with a binary format.
+
+
+
+
+(Proposed) Solution:
+--------------------
+
+Choose a markup format that displays all of the metadata in a package.
+
+RPM (all versions of RPM since rpm-3.0.6) includes a very
+simple XML markup to dump all the metadata in a package. The
+existing widely deployed XML markup can be seen by typing, say,
+     rpm -q --xml bash
+
+A very short example that displays all 5 XML tags is:
+
+<rpmHeader>
+  <rpmTag name="Headeri18ntable">
+	<string>C</string>
+  </rpmTag>
+  <rpmTag name="Sigsize">
+	<integer>924592</integer>
+  </rpmTag>
+  <rpmTag name="Sigpgp">
+	<base64>iQIVAwUAUefxoglG/KLBBbneAQKTdw/9FHsbBZxBWb7OM4v1+QJBPe6rUTYr9tWu
+YwkPqP0GOfT5zdjkocYmX9WAJNrztv0OQAdTDyOVvkIa/ewQ3HfNSMMdTwSoe0qd
+AsUGmHbc2McUClT4JNVAIrZlmYOZ0rLTTSDeOFTS0JUIdmOCgL+0Cfl5mqvupWI+
+yTcqI5MuwrwrMHCkmSDX3rTCgmR5ZYbTsusD8JRLya2vA0rF8EGLfVvZPVKr4VY6
+7iDW2nc8l3TdO5HlGVHmsDc5Qz3uV7dWHHKlBdDZE2gua/hS/a75HewDXeTys2SH
+lWGzCQbtbQMNYhays0qIZFyHdmuvXchnd+F8YEA3dRvPfvwn2paCouuhUMWENgxc
+uZoBeo53bLe7/7xsmOdr1juK8IxFzQJyJxe3o1SDontk4pT9GNPWIkCJgQr5td9K
+F3tCApsvtRX3dFU7Ed8MAUyrRzCoYhG/AVmZ8WAkYuszN6SfFJgbG39NAYiz5/Ec
+d6lcLSgOjNqyGr35CRaIOn4dSoBJzrGFhjZSnK2DyJVjZ1lGZxjMN7kEri30hpnH
+3f4BmoVFCrT69yioRfOTXHTf1paLvvJ1/z7TCX6fF39oUcH98HIa47Idvd1qEv29
+RPjb7yETUMS6byHecHKw+mWIXLNtKU9I1xRThsW1X1WsBzq/I6RtP9RZgUWkSbWA
+IEzVfdVuj1A=
+</base64>
+
+A sed(1) script could be used if any of
+	<rpmHeader>
+	<rpmTag name ="...">
+	<string>
+	<integer>
+	<base64>
+are deemed too rpm-centric for package markup. The real goal of
+using markup instead of binary packages is an attempt to unify
+the representation of a package -- including dpkg -- in a WYSIWYG
+format that is much easier to examine and understand.
+
+The hope is that better testing tools can be written using the
+markup (rather than packages) as input, and that the non-LSB
+*.deb packages might be usefully included.
+
+There are of course many other markups, including JSON/YAML, that
+might be useful. I have described the --xml markup
+which is already widely deployed in RPM.
+
+Solution Discussion Links:
+--------------------------
+
+THere are endless discussions of the relative merits of *.rpm vs *.deb
+that have occurred over the years, mostly without any deep or complete
+understanding of what metadata is contained in a package.
+
+
+Solution Rationale:
+------------------
+
+The --xml option was added to rpm in order to supply a WYSIWYG
+complete specification of what is in a LSB *.rpm package.
+
+
+Distributions Support:
+----------------------
+
+All distro's that use rpm (that I know of) include the --xml option.
+
+
+Verification Test:
+------------------
+
+Validation tests for the generated XML can be undertaken as needed.
